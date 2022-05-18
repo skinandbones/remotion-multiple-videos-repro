@@ -1,3 +1,4 @@
+import {Freeze, useCurrentFrame} from 'remotion';
 import {useEffect, useState} from 'react';
 import {
 	continueRender,
@@ -56,16 +57,19 @@ const VideoCard = ({src}: {src: string}) => {
 	const {durationInSeconds} = useVideoMetaData(src);
 	const {fps} = useVideoConfig();
 	const durationInFrames = Math.floor(durationInSeconds * fps);
+	const frame = useCurrentFrame();
 
 	return (
 		<div className="w-full h-full">
 			{durationInFrames > 0 ? (
 				<Loop durationInFrames={durationInFrames} layout="none">
-					<Video
-						muted
-						src={src}
-						className="w-full h-full object-cover rounded-lg shadow"
-					/>
+					<Freeze frame={Math.floor(frame / 2.0) * 2.0}>
+						<Video
+							muted
+							src={src}
+							className="w-full h-full object-cover rounded-lg shadow"
+						/>
+					</Freeze>
 				</Loop>
 			) : null}
 		</div>
